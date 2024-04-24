@@ -22,3 +22,77 @@ On the application side, we have the application object, which shall be callable
 def simple_app(environ, start_response):
 #+end_src
 It shall return an iterable yielding zero or more strings
+
+This application can then be served e.g. with gunicorn or for development purposes with ~wsgiref.simple_server~
+
+#+begin_src python :results output
+from wsgiref.simple_server import make_server
+
+server = make_server('localhost', 8000, app=simple_app)
+server.serve_forever()
+#+end_src
+** Routing
+
+To acheive Decorator like registering of routes like in *Flask* or injection-like registering like in *Django*, one needs to implement a method on its application object for registering the routes. The application can make use of the [[https://github.com/r1chardj0n3s/parse][Parse]] library to easily retrieve the routes via route-patterns
+
+#+begin_src python :results output
+def add_route(self, path, handler):
+    assert path not in self.routes, "Such route already exists"
+    self.routes[path] = handler
+
+def find_handler(self, request_path: str):
+    for path, handler in self.routes.items():
+        res = parse(path, request_path)
+#+end_src
+
+
+For easier and more intuitive handling of ~environ~ and ~start_response~ one can use [[https://docs.pylonsproject.org/projects/webob/en/stable/index.html][webob]] Request and Response objects.
+
+** Unit test and test client
+
+Using unit test one can verify the base functionality.
+For extending the functionality like default-responses, templates, exception handlers and static files, we write the tests first, see them fail and add the functionality itself, followed by refactoring.
+
+To test the app in an fast, isolated and repeatable way, one would need a test_client to call the api without spinning it up with a web server each time. This can be acheive using the [[https://github.com/seanbrant/requests-wsgi-adapter][request-wsgi-adapter]].
+
+#+begin_src python :results output
+def test_session(self, base_url="http://testserver"):
+    session = RequestsSession()
+    session.mount(prefix=base_url, adapter=RequestsWSGIAdapter(self))
+    return session
+#+end_src
+
+** Templates
+
+Templates are as easy as providing the templates_dir on app initialization and using it inside the route
+#+begin_src python :results output
+def __init__(self, templates_dir="templates"):
+    self.routes = {}
+    self.templates_env = Environment(
+        loader=FileSystemLoader(os.path.abspath(templates_dir))
+    )
+
+def template(self, template_name: str, context: dict):
+    return self.templates_env.get_template(template_name).render(context)
+
+@app.route("/html")
+def html_handler(req, resp):
+    resp.body = app.template(
+        "home.html", context={"title": "Some Title", "name": "Some Name"}
+    ).encode()
+#+end_src
+
+** Static Files
+
+To use static files we make use of the package Whitenoise.
+Whitenoise wraps a wsgi-application and provides it with static files.
+Since a wsgi application is just a callable with a specific function signature, we can wrap whatever we had inside the ~__call__~ method
+of our API class, and call that with whitenoise.
+
+#+begin_src python :results output
+def __init__(self, templates_dir="templates", static_dir="static"):
+    self.whitenoise = WhiteNoise(self.wsgi_app, root=static_dir)
+    ...
+def __call__(self, environ, start_response):
+    return self.whitenoise(environ, start_response)
+#+end_src

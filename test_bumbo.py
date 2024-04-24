@@ -1,25 +1,7 @@
-from jinja2.utils import json
 import pytest
 import requests
-from webob import Request, Response
 from api import API
-from jinja2 import Template
-
-
-# def test_template_adding(api: API, test_client: requests.Session):
-#     @api.route("/home")
-#     class book:
-#         def __init__(self, template: str):
-#             self.template = Template
-
-#         def get(self, req: Request, resp: Response):
-#             try:
-#                 body = json.loads(req.body.decode("utf-8"))
-#             except json.JSONDecodeError as e:
-#                 print(f"Error decoding JSON: {e}")
-#             title = body["title"]
-#             name = body["name"]
-#             resp.text = self.template.render(title=title, name=name)
+import pathlib
 
 
 def test_template_inside_handler(api: API, test_client: requests.Session):
@@ -144,3 +126,36 @@ def test_custom_exception_handler(api: API, test_client: requests.Session):
 
     response = test_client.get("http://testserver/")
     assert response.text == "AttributeErrorHappened"
+
+
+def test_404_is_returned_for_nonexistent_static_file(test_client: requests.Session):
+    assert test_client.get(f"http://testserver/main.css)").status_code == 404
+
+
+FILE_DIR = "css"
+FILE_NAME = "main.css"
+FILE_CONTENTS = "body {background-color: red}"
+
+
+def _create_static(static_dir: pathlib.Path):
+    asset = static_dir / FILE_NAME
+    asset.write_text(FILE_CONTENTS, encoding="utf-8")
+    return asset
+
+
+def test_assets_are_served(tmp_path_factory: pytest.TempPathFactory):
+    static_dir = tmp_path_factory.mktemp(FILE_DIR)
+    _create_static(static_dir)
+
+    api = API(static_dir=str(static_dir))
+
+    test_client = api.test_session()
+
+    response = test_client.get(f"http://testserver/{FILE_NAME}")
+
+    assert response.status_code == 200
+    assert response.text == FILE_CONTENTS
+
+
+def test_returns_for_nonexistent_static_file(test_client: requests.Session):
+    assert test_client.get(f"http://testserver/main.css)").status_code == 404
