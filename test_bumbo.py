@@ -1,7 +1,10 @@
+import pathlib
+
 import pytest
 import requests
+
 from api import API
-import pathlib
+from middleware import Middleware
 
 
 def test_template_inside_handler(api: API, test_client: requests.Session):
@@ -159,3 +162,31 @@ def test_assets_are_served(tmp_path_factory: pytest.TempPathFactory):
 
 def test_returns_for_nonexistent_static_file(test_client: requests.Session):
     assert test_client.get(f"http://testserver/main.css)").status_code == 404
+
+
+def test_adding_middleware(api: API, test_client: requests.Session):
+    process_request_called = False
+    process_response_called = False
+
+    class CallMiddlewareMethods(Middleware):
+        def __init__(self, app):
+            super().__init__(app)
+
+        def process_request(self, req):
+            nonlocal process_request_called
+            process_request_called = True
+
+        def process_response(self, req):
+            nonlocal process_response_called
+            process_response_called = True
+
+    api.add_middleware(CallMiddlewareMethods)
+
+    @api.route("/")
+    def index(req, res):
+        res.text = "YOLO"
+
+    test_client.get("http://testserver/")
+
+    assert process_request_called is True
+    assert process_response_called is True

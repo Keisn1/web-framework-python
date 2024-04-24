@@ -8,6 +8,8 @@ from webob import Request, Response
 from wsgiadapter import WSGIAdapter as RequestsWSGIAdapter
 from whitenoise import WhiteNoise
 
+from middleware import Middleware
+
 
 class API:
     def __init__(self, templates_dir="templates", static_dir="static"):
@@ -20,9 +22,10 @@ class API:
         )
 
         self.whitenoise = WhiteNoise(self.wsgi_app, root=static_dir)
+        self.middleware = Middleware(self)
 
     def __call__(self, environ, start_response):
-        return self.whitenoise(environ, start_response)
+        return self.middleware(environ, start_response)
 
     def wsgi_app(self, environ, start_response):
         request = Request(environ)
@@ -81,3 +84,6 @@ class API:
         session = RequestsSession()
         session.mount(prefix=base_url, adapter=RequestsWSGIAdapter(self))
         return session
+
+    def add_middleware(self, mid: Middleware):
+        self.middleware.add(mid)
