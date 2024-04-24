@@ -1,0 +1,10 @@
+#+title: Readme
+
+* Introduction
+
+This Repo follows the course "Building your own Python Framework" over at testdriven.io.
+Over this course we learn about *WSGI* , how frameworks like Django and Flask implement their route functionality and other features like
+- templates
+- exception handling
+- middleware
+- allowing methods

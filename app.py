@@ -32,3 +32,22 @@ class BooksResource:
 
     def post(self, req, resp):
         resp.text = "Endpoint to create a book"
+
+
+@app.route("/html")
+def html_handler(req, resp):
+    resp.body = app.template(
+        "home.html", context={"title": "Some Title", "name": "Some Name"}
+    ).encode()
+
+
+def on_exception(req, resp, exc):
+    resp.text = str(exc)
+
+
+app.add_exception_handler(on_exception)
+
+
+@app.route("/exception")
+def exception_endpoint(req, resp):
+    raise ValueError("password at least 8 characters")
