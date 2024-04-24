@@ -3,8 +3,22 @@
 * Introduction
 
 This Repo follows the course "Building your own Python Framework" over at testdriven.io.
-Over this course we learn about *WSGI* , how frameworks like Django and Flask implement their route functionality and other features like
+Over this course we learn about *WSGI* , how frameworks like *Django* and *Flask* implement their route functionality and other features like
 - templates
 - exception handling
 - middleware
 - allowing methods
+
+and additionally about building your own *ORM* and *Deployment*.
+* Part 1
+** WSGI
+*** What is WSGI
+WSGI (Web Server Gateway Interface) is a proposed standard as of PEP333 of how a Web Server should talk to a python web appilcation.
+
+This gives way for a unified way of talking to python web applications for web servers, which in turn permits to deploy python web applications in a standardized way.
+*** Application side
+On the application side, we have the application object, which shall be callable and take 2 positional arguments
+#+begin_src python :results output
+def simple_app(environ, start_response):
+#+end_src
+It shall return an iterable yielding zero or more strings
