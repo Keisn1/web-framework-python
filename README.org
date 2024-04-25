@@ -166,7 +166,7 @@ def __call__(self, environ, start_response):
     return self.middleware(environ, start_response)
 #+end_src
 
-*** allowing methods
+** allowing methods
 Adding allowed methods to all our ways of adding routes, requires us to change our data structure a little bit.
 From
 #+begin_src python :results output
@@ -197,4 +197,46 @@ try:
             handler(request, response, **kwargs)
         handler(request, response, **kwargs)
 ...
+#+end_src
+** Custom Responses
+
+Next we make it possible to respond with json, html or plain text.
+Therefore one may implement a Custom Response that makes use of the Webob Response object.
+The user has access to that response object via the handler (as before).
+
+#+begin_src python :results output
+@app.route("/home")
+def html(req, resp):
+    resp.json = {"name": "bumbo"}
+#+end_src
+
+When the framework sends back the response, as in
+#+begin_src python :results output
+def handle_request(self, request):
+    response = CustomResponse
+    ...
+    return response()
+#+end_src
+the response call method is executed. This is where the logic is applied then
+
+#+begin_src python :results output
+from webob import Response
+
+def CustomResponse:
+    self.json = None
+    self.status_code = 200
+    ...                         # setting of other variables
+
+   def __call__(self):
+       self.set_body_and_content_type()
+       response = Response(
+           body=self.body, content_type=self.content_type, status=f"{self.status_code}"
+       )
+       return response(environ, start_response)
+
+    def set_body_and_content_type(self):
+        if self.json is not None:
+            self.body = json.dumps(self.json).encode("UTF-8")
+            self.content_type = "application/json"
+        ...                     # more handling of html and text
 #+end_src

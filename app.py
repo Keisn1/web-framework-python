@@ -63,3 +63,21 @@ class SimpleCustomMiddleware(Middleware):
 
 
 app.add_middleware(SimpleCustomMiddleware)
+
+
+# testing CustomResponse feature
+@app.route("/template")
+def template_handler(req, resp):
+    resp.html = app.template(
+        "index.html", context={"name": "Bumbo", "title": "Best Framework"}
+    )
+
+
+@app.route("/json")
+def json_handler(req, resp):
+    resp.json = {"name": "data", "type": "JSON"}
+
+
+@app.route("/text")
+def text_handler(req, resp):
+    resp.text = "This is a simple text"
