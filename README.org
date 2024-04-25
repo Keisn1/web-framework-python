@@ -11,8 +11,8 @@ Over this course we learn about *WSGI* , how frameworks like *Django* and *Flask
 - exception handling
 - middleware
 - allowing methods
-
 and additionally about building your own *ORM* and *Deployment*.
+
 * Part 1
 ** WSGI
 *** What is WSGI
