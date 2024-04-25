@@ -165,3 +165,36 @@ def __call__(self, environ, start_response):
 
     return self.middleware(environ, start_response)
 #+end_src
+
+*** allowing methods
+Adding allowed methods to all our ways of adding routes, requires us to change our data structure a little bit.
+From
+#+begin_src python :results output
+self.routes[path] = handler
+#+end_src
+
+to
+
+#+begin_src python :results output
+self.routes[path] = {"handler": handler, "allowed_methods": allowed_methods}
+#+end_src
+
+Which we then can exploit when we're handling the request
+
+#+begin_src python :results output
+...
+handler_data, kwargs = self.find_handler(request.path)
+try:
+    if handler_data is not None:
+        if request.method.lower() not in handler_data["allowed_methods"]:
+            raise AttributeError("Method not allowed", request.method)
+
+        handler = handler_data["handler"]
+        if inspect.isclass(handler):
+            handler = getattr(handler(), request.method.lower(), None)
+            if handler is None:
+                raise AttributeError("Method not allowed", request.method)
+            handler(request, response, **kwargs)
+        handler(request, response, **kwargs)
+...
+#+end_src

@@ -177,7 +177,7 @@ def test_adding_middleware(app: API, test_client: requests.Session):
             nonlocal process_request_called
             process_request_called = True
 
-        def process_response(self, req):
+        def process_response(self, req, res):
             nonlocal process_response_called
             process_response_called = True
 
@@ -191,3 +191,15 @@ def test_adding_middleware(app: API, test_client: requests.Session):
 
     assert process_request_called is True
     assert process_response_called is True
+
+
+def test_allowed_methods_for_function_based_handlers(
+    app: API, test_client: requests.Session
+):
+    @app.route("/home", allowed_methods=["post"])
+    def home(req, resp):
+        resp.text = "Hello"
+
+    with pytest.raises(AttributeError):
+        test_client.get("http://testserver/home")
+    assert test_client.post("http://testserver/home").text == "Hello"

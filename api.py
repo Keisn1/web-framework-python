@@ -40,15 +40,19 @@ class API:
     def template(self, template_name: str, context: dict):
         return self.templates_env.get_template(template_name).render(context)
 
-    def route(self, path):
+    def route(self, path, allowed_methods=None):
         def wrapper(handler):
-            self.add_route(path, handler)
+            self.add_route(path, handler, allowed_methods)
 
         return wrapper
 
-    def add_route(self, path, handler):
+    def add_route(self, path, handler, allowed_methods=None):
         assert path not in self.routes, "Such route already exists"
-        self.routes[path] = handler
+
+        if allowed_methods is None:
+            allowed_methods = ["get", "post", "put", "patch", "delete", "options"]
+
+        self.routes[path] = {"handler": handler, "allowed_methods": allowed_methods}
 
     def add_exception_handler(self, exception_handler):
         self.exception_handler = exception_handler
@@ -56,13 +60,18 @@ class API:
     def handle_request(self, request: Request) -> Response:
         response = Response()
 
-        handler, kwargs = self.find_handler(request.path)
+        handler_data, kwargs = self.find_handler(request.path)
         try:
-            if handler is not None:
+            if handler_data is not None:
+                if request.method.lower() not in handler_data["allowed_methods"]:
+                    raise AttributeError("Method not allowed", request.method)
+
+                handler = handler_data["handler"]
                 if inspect.isclass(handler):
                     handler = getattr(handler(), request.method.lower(), None)
                     if handler is None:
                         raise AttributeError("Method not allowed", request.method)
+                    handler(request, response, **kwargs)
                 handler(request, response, **kwargs)
             else:
                 self.default_response(response)
@@ -75,10 +84,10 @@ class API:
         return response
 
     def find_handler(self, request_path: str):
-        for path, handler in self.routes.items():
+        for path, handler_data in self.routes.items():
             res = parse(path, request_path)
             if res is not None:
-                return handler, res.named
+                return handler_data, res.named
         return None, None
 
     def default_response(self, response: Response):

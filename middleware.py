@@ -13,7 +13,7 @@ class Middleware:
     def handle_request(self, request):
         self.process_request(request)
         response = self.app.handle_request(request)
-        self.process_response(request)
+        self.process_response(request, response)
         return response
 
     def add(self, middleware_cls):
