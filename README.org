@@ -3,12 +3,6 @@
 
 * Introduction
 
-#+begin_src markdown
-# Bumbo: Python Web Framework built for learning purposes
-
-![purpose](https://img.shields.io/badge/purpose-learning-green.svg)
-![PyPI](https://img.shields.io/pypi/v/bumbo.svg)
-#+end_src
 This Repo follows the course "Building your own Python Framework" over at testdriven.io.
 Over this course we learn about *WSGI* , how frameworks like *Django* and *Flask* implement their route functionality and other features like
 - templates
