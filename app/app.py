@@ -1,5 +1,5 @@
-from api import API
-from middleware import Middleware
+from kaychen.api import API
+from kaychen.middleware import Middleware
 
 app = API()
 
@@ -69,7 +69,7 @@ app.add_middleware(SimpleCustomMiddleware)
 @app.route("/template")
 def template_handler(req, resp):
     resp.html = app.template(
-        "index.html", context={"name": "Bumbo", "title": "Best Framework"}
+        "index.html", context={"name": "kaychen", "title": "Best Framework"}
     )
 
 

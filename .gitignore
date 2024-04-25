@@ -1,2 +1,4 @@
 /.venv/
 *.pyc
+/dist/
+/kaychen.egg-info/

@@ -3,8 +3,8 @@ import pathlib
 import pytest
 import requests
 
-from api import API
-from middleware import Middleware
+from kaychen.api import API
+from kaychen.middleware import Middleware
 
 
 def test_template_inside_handler(app: API, test_client: requests.Session):
@@ -244,13 +244,13 @@ def test_text_response_helper(app: API, test_client: requests.Session):
     assert response.text == response_text
 
 
-def test_manually_setting_body(api, client):
-    @api.route("/body")
+def test_manually_setting_body(app: API, test_client: requests.Session):
+    @app.route("/body")
     def text_handler(req, resp):
         resp.body = b"Byte Body"
         resp.content_type = "text/plain"
 
-    response = client.get("http://testserver/body")
+    response = test_client.get("http://testserver/body")
 
     assert "text/plain" in response.headers["Content-Type"]
     assert response.text == "Byte Body"

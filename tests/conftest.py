@@ -1,6 +1,6 @@
 import pytest
 
-from api import API
+from kaychen.api import API
 
 
 @pytest.fixture

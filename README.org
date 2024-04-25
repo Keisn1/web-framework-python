@@ -207,7 +207,7 @@ The user has access to that response object via the handler (as before).
 #+begin_src python :results output
 @app.route("/home")
 def html(req, resp):
-    resp.json = {"name": "bumbo"}
+    resp.json = {"name": "kaychen"}
 #+end_src
 
 When the framework sends back the response, as in
@@ -240,3 +240,5 @@ def CustomResponse:
             self.content_type = "application/json"
         ...                     # more handling of html and text
 #+end_src
+
+** Pypi

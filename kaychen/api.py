@@ -5,11 +5,11 @@ from jinja2 import Environment, FileSystemLoader
 from parse import parse
 from requests import Session as RequestsSession
 from webob import Request
-from wsgiadapter import WSGIAdapter as RequestsWSGIAdapter
 from whitenoise import WhiteNoise
+from wsgiadapter import WSGIAdapter as RequestsWSGIAdapter
 
-from middleware import Middleware
-from response import CustomResponse as Response
+from .middleware import Middleware
+from .response import CustomResponse as Response
 
 
 class API:
