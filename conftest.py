@@ -4,10 +4,10 @@ from api import API
 
 
 @pytest.fixture
-def api():
+def app():
     return API()
 
 
 @pytest.fixture
-def test_client(api: API):
-    return api.test_session()
+def test_client(app: API):
+    return app.test_session()

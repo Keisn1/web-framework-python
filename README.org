@@ -96,3 +96,72 @@ def __init__(self, templates_dir="templates", static_dir="static"):
 def __call__(self, environ, start_response):
     return self.whitenoise(environ, start_response)
 #+end_src
+** Middleware
+*** The middleware class, base functionality
+To use middleware, we write a Class ~Middleware~. It defines two methods to process request and response: =process_request= and =process_response=.
+These functions do nothing on the base class, but can be overwritten when creating a child.
+
+When handling requests, it first calls process_request, then the handler of the app, then the process_response, before returning the response.
+#+begin_src python :results output
+class Middleware:
+    ...
+    def handle_request(self, request):
+        self.process_request(request)
+        response = self.app.handle_request(request)
+        self.process_response(request)
+        return response
+#+end_src
+
+Since each middleware serves as the Server-side implementation of the WSGI protocol for the application that gets called after it, it needs to be callable in the WSGI sense.
+#+begin_src python :results output
+class Middleware:
+    ...
+    def __call__(self, environ, start_response):
+        request = Request(environ)
+        response = Response(self.handle_request)
+        return response(environ, start_response)
+#+end_src
+
+The wsgi logic of using environ and start_response is hidden in the behavior of the webob objects Request and Response.
+
+*** the convoluted part
+Furthermore, to add another middleware to the middleware stack, one wraps a given middleware aroung the app.
+
+#+begin_src python :results output
+class Middleware:
+    ...
+    def add(mid: Middleware):
+        self.app = mid(self.app)
+#+end_src
+
+We can then apply the same logic on our framework api, by initialising a base middleware with our app, and calling the middleware when handling requests
+
+#+begin_src python :results output
+class API:
+    def __init__(self, templates_dir="templates", static_dir="static"):
+        ...
+        self.mid = Middleware(self)
+
+    ...
+
+    def add(mid: Middleware):
+        self.app = mid(self.app)
+
+    ...
+
+    def __call__(self, environ, start_response):
+        self.middleware(environ, start_response)
+#+end_src
+
+*** static files
+This would unable our handling of static files. Therefore we oblige to be the static files being served on route, which root is ~/static~
+
+#+begin_src python :results output
+def __call__(self, environ, start_response):
+    path_info = environ["PATH_INFO"]
+    if path_info.startswith("/static"):
+        environ["PATH_INFO"] = path_info[len("/static") :]
+        return self.whitenoise(environ, start_response)
+
+    return self.middleware(environ, start_response)
+#+end_src

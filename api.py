@@ -25,6 +25,11 @@ class API:
         self.middleware = Middleware(self)
 
     def __call__(self, environ, start_response):
+        path_info = environ["PATH_INFO"]
+        if path_info.startswith("/static"):
+            environ["PATH_INFO"] = path_info[len("/static") :]
+            return self.whitenoise(environ, start_response)
+
         return self.middleware(environ, start_response)
 
     def wsgi_app(self, environ, start_response):
@@ -85,5 +90,5 @@ class API:
         session.mount(prefix=base_url, adapter=RequestsWSGIAdapter(self))
         return session
 
-    def add_middleware(self, mid: Middleware):
+    def add_middleware(self, mid: type[Middleware]):
         self.middleware.add(mid)
