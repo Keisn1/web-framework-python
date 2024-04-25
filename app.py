@@ -1,5 +1,5 @@
 from api import API
-
+from middleware import Middleware
 
 app = API()
 
@@ -51,3 +51,15 @@ app.add_exception_handler(on_exception)
 @app.route("/exception")
 def exception_endpoint(req, resp):
     raise ValueError("password at least 8 characters")
+
+
+# custom middleware
+class SimpleCustomMiddleware(Middleware):
+    def process_request(self, req):
+        print("Processing request", req.url)
+
+    def process_response(self, req, res):
+        print("Processing response", req.url)
+
+
+app.add_middleware(SimpleCustomMiddleware)

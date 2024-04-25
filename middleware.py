@@ -22,5 +22,5 @@ class Middleware:
     def process_request(self, req):
         pass
 
-    def process_response(self, req):
+    def process_response(self, req, res):
         pass
