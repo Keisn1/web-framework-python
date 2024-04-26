@@ -5,9 +5,6 @@
 ![PyPI](https://img.shields.io/pypi/v/bumbo.svg)
 #+end_src
 
-* Table of contents
-#+TOC: headlines 2
-
 * Introduction
 This Repo follows the course "Building your own Python Framework" over at testdriven.io.
 Over this course we learn about *WSGI* , how frameworks like *Django* and *Flask* implement their route functionality and other features like
@@ -17,6 +14,8 @@ Over this course we learn about *WSGI* , how frameworks like *Django* and *Flask
 - allowing methods
 and additionally about building your own *ORM* and *Deployment*.
 
+* Table of contents
+#+TOC: headlines 2
 * Part 1
 ** WSGI
 *** What is WSGI
