@@ -1,0 +1,8 @@
+:PROPERTIES:
+:ID:       a86e6ac6-344a-47ed-8810-55542e10f716
+:END:
+#+title: Deployment
+#+date: [2024-04-26 Fri 10:11]
+#+startup: overview
+
+* [[id:243cedc4-4fa7-480a-b2d5-eeb49ac28c82][Pypi]]

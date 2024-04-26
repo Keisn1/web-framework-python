@@ -1,0 +1,12 @@
+:PROPERTIES:
+:ID:       243cedc4-4fa7-480a-b2d5-eeb49ac28c82
+:END:
+#+title: Pypi
+#+date: [2024-04-26 Fri 10:11]
+#+startup: overview
+
+* Pypi
+Next we publish the package to Pypi using [[https://github.com/navdeep-G/setup.py][setup.py (for humans)]]. A few things to keep in mind
+- =find_packages= used in setup.py, therefore need to have =__init__.py= so it finds the package
+- when using the package in combination with ~gunicorn~, one still needs to install ~gunicorn~ inside the virtualenv
+- need to create directories (~/static~, ~/templates~)

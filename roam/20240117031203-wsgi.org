@@ -22,3 +22,4 @@ WSGI does not specify how the Python interpreter should be started, nor how the 
 * [[id:fe288fc1-457d-46be-aa41-5ae2235d35ed][Server side specification]]
 * [[id:d1cac51c-8637-4e02-bffe-a36f829efa64][special attention wsgi specifics]]
 * [[id:4fcbd683-b075-478b-b902-d0f7cb2d60a3][WebOb]]
+* [[id:16863152-959d-4b10-80d6-f3924f2caf40][CGI common gateway interface]]

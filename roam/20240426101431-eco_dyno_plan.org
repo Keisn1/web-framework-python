@@ -1,0 +1,11 @@
+:PROPERTIES:
+:ID:       1a314865-72ba-4eaa-b2fb-40f7054ba0a8
+:END:
+#+title: Eco Dyno plan
+#+date: [2024-04-26 Fri 10:14]
+#+startup: overview
+
+https://devcenter.heroku.com/articles/eco-dyno-hours
+
+- Eco dynaos provide pool of Eco dyno hours
+- aleep automatically after a period of inactivity to conserve your dyno hours

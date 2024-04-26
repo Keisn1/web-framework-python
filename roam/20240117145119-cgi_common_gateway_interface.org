@@ -5,8 +5,8 @@
 #+date: [2024-01-17 Wed 14:51]
 #+startup: overview
 
-- datandard protocol that defines how web servers communicate with external programs or scripts
-- enables th eexecution of these programs on a web server to generate dynamic content
+- standard protocol that defines how web servers communicate with external programs or scripts
+- enables the eexecution of these programs on a web server to generate dynamic content
 
 * Overview of how it works
 ** User Request
