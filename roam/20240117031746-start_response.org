@@ -1,0 +1,16 @@
+:PROPERTIES:
+:ID:       694cb66d-6827-4c4a-819d-e0a8e3e35212
+:END:
+#+title: start_response
+#+date: [2024-01-17 Wed 03:17]
+#+startup: overview
+
+- callable
+* 2 positional arguments
+- [[id:905f7060-9756-4e50-8da9-85ade31727dc][status]]
+- [[id:c52b7427-1bc3-4214-8fe6-0f9faa0937b9][response_headers]]
+* 1 optional argument
+- exc_info
+* returns
+- write(body_data) callable
+- a string to be written as part of the HTTP response body

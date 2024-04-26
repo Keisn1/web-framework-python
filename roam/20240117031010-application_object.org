@@ -1,0 +1,56 @@
+:PROPERTIES:
+:ID:       637c51ef-cc7d-4cf0-bda2-9dc625b60dc7
+:END:
+#+title: Application object
+#+date: [2024-01-17 Wed 03:10]
+#+startup: overview
+
+callable object
+
+- Application *SERVER* must invoke the start_response callable using positional arguments
+* Callable object
+** 2 positional arguments
+*** [[id:8e575c95-28e7-4e1a-a68e-1417ef1af490][environ]]
+*** [[id:694cb66d-6827-4c4a-819d-e0a8e3e35212][start_response]]
+** Return Value
+- iterable yielding zero or more strings, e.g.:
+  - list of strings,
+  - generator function that yields strings
+  - class whose instances are iterable
+** examples
+*** function
+#+begin_src python :results output
+def simple_app(environ, start_response):
+    """Simplest possible application object"""
+    status = '200 OK'
+    response_headers = [('Content-type', 'text/plain')]
+    start_response(status, response_headers)
+    return ['Hello world!\n']
+#+end_src
+*** class
+#+begin_src python :results output
+class AppClass:
+    """Produce the same output, but using a class
+
+    (Note: 'AppClass' is the "application" here, so calling it
+    returns an instance of 'AppClass', which is then the iterable
+    return value of the "application callable" as required by
+    the spec.
+
+    If we wanted to use *instances* of 'AppClass' as application
+    objects instead, we would have to implement a '__call__'
+    method, which would be invoked to execute the application,
+    and we would need to create an instance for use by the
+    server or gateway.
+    """
+
+    def __init__(self, environ, start_response):
+        self.environ = environ
+        self.start = start_response
+
+    def __iter__(self):
+        status = '200 OK'
+        response_headers = [('Content-type', 'text/plain')]
+        self.start(status, response_headers)
+        yield "Hello world!\n"
+#+end_src

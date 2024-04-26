@@ -1,0 +1,12 @@
+:PROPERTIES:
+:ID:       4fcbd683-b075-478b-b902-d0f7cb2d60a3
+:END:
+#+title: WebOb
+#+date: [2024-01-17 Wed 18:45]
+#+startup: overview
+
+https://docs.pylonsproject.org/projects/webob/en/stable/reference.html#request
+provide wrapper around a [[id:e6028503-bca7-4ba5-be8c-6ee1204e0731][wsgi]] environment
+
+[[id:2f96baaf-9bf9-4b07-80b3-c3cf77aab52a][Request object]]
+[[id:93a405e5-5d3e-43d1-9805-b2b4409cb0ba][Response object]]

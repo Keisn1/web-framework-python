@@ -1,0 +1,8 @@
+:PROPERTIES:
+:ID:       905f7060-9756-4e50-8da9-85ade31727dc
+:END:
+#+title: status
+#+date: [2024-01-17 Wed 03:20]
+#+startup: overview
+
+string of the form "999 Message here"

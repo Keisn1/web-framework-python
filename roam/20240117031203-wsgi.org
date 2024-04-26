@@ -1,0 +1,24 @@
+:PROPERTIES:
+:ID:       e6028503-bca7-4ba5-be8c-6ee1204e0731
+:END:
+#+title: wsgi 
+#+date: [2024-01-17 Wed 03:12]
+#+startup: overview
+
+Python webserver gateway interface
+* Overview
+** [[https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface
+][wikipedia/wsgi]]
+The WSGI has two sides:
+
+1. the server/gateway side. This is often running full web server software such as Apache or Nginx, or is a lightweight application server that can communicate with a webserver, such as flup.
+2. the application/framework side. This is a Python callable, supplied by the Python program or framework.
+Between the server and the application, there may be one or more WSGI middleware components, which implement both sides of the API, typically in Python code.
+
+WSGI does not specify how the Python interpreter should be started, nor how the application object should be loaded or configured, and different frameworks and webservers achieve this in different ways.
+* Server (gateway) side
+* [[id:40bb5f73-aaba-46a9-9b4c-e380b8ed27a4][Application side]]
+* [[id:5bef7806-d887-4d66-8c64-bc56816da0dc][Middleware]]
+* [[id:fe288fc1-457d-46be-aa41-5ae2235d35ed][Server side specification]]
+* [[id:d1cac51c-8637-4e02-bffe-a36f829efa64][special attention wsgi specifics]]
+* [[id:4fcbd683-b075-478b-b902-d0f7cb2d60a3][WebOb]]

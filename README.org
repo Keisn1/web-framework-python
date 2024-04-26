@@ -249,3 +249,6 @@ Next we publish the package to Pypi using [[https://github.com/navdeep-G/setup.p
 - =find_packages= used in setup.py, therefore need to have =__init__.py= so it finds the package
 - when using the package in combination with ~gunicorn~, one still needs to install ~gunicorn~ inside the virtualenv
 - need to create directories (~/static~, ~/templates~)
+** example web app
+To see the framework in action we build an example application: [[https://github.com/Keisn1/kaychen-web-app][kaychen-web-app]]
+** Deploying to Heroku

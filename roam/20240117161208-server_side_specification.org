@@ -1,0 +1,6 @@
+:PROPERTIES:
+:ID:       fe288fc1-457d-46be-aa41-5ae2235d35ed
+:END:
+#+title: Server side specification
+#+date: [2024-01-17 Wed 16:12]
+#+startup: overview

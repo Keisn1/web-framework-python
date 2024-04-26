@@ -1,0 +1,10 @@
+:PROPERTIES:
+:ID:       d1cac51c-8637-4e02-bffe-a36f829efa64
+:END:
+#+title: special attention wsgi specifics
+#+date: [2024-01-17 Wed 14:45]
+#+startup: overview
+
+* Arguments
+
+- all arguments must be supplied positionally

@@ -1,0 +1,17 @@
+:PROPERTIES:
+:ID:       16863152-959d-4b10-80d6-f3924f2caf40
+:END:
+#+title: CGI common gateway interface
+#+date: [2024-01-17 Wed 14:51]
+#+startup: overview
+
+- datandard protocol that defines how web servers communicate with external programs or scripts
+- enables th eexecution of these programs on a web server to generate dynamic content
+
+* Overview of how it works
+** User Request
+** Identification of CGI Script
+- e.g. via URL
+** Execution of CGI Script
+** Script processing
+** Web server sends response

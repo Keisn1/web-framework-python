@@ -1,0 +1,42 @@
+:PROPERTIES:
+:ID:       2f96baaf-9bf9-4b07-80b3-c3cf77aab52a
+:END:
+#+title: Request object
+#+date: [2024-01-17 Wed 18:46]
+#+startup: overview
+
+- wraps the environment
+- attributes are written to environ dict
+
+#+begin_src python :results output
+from webob import Request
+environ = {'wsgi.url_scheme': 'http', ...}
+req = Request(environ)
+#+end_src
+
+usually wsgi env provides you with the environ
+i.e.
+guvicorn run app:app
+#+begin_src python :results output
+app = API()
+class API:
+    def __call__(self, environ, start_response):
+        request = Request(environ)
+
+        response = Response()
+        response.text = "Hello World\n"
+
+        return response(environ, start_response)
+#+end_src
+* Request Body
+* Method & URL
+* Headers
+* Query & POST variables
+* Unicode Variables
+* Cookies
+* Modifying the request
+* Header Getters
+* Accept-* headers
+* Conditional Requests
+* Calling WSGI Applications
+* Ad-Hoc Attributes

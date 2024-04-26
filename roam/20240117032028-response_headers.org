@@ -1,0 +1,9 @@
+:PROPERTIES:
+:ID:       c52b7427-1bc3-4214-8fe6-0f9faa0937b9
+:END:
+#+title: response_headers
+#+date: [2024-01-17 Wed 03:20]
+#+startup: overview
+
+list of tuples (header_name, header_value)
+- describing HTTP response header

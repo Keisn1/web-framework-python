@@ -1,0 +1,6 @@
+:PROPERTIES:
+:ID:       70b32274-b47c-47b8-80d4-28e0e8e21158
+:END:
+#+title: WSGI required variables in environ
+#+date: [2024-01-17 Wed 03:17]
+#+startup: overview

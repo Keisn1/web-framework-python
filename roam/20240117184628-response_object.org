@@ -1,0 +1,16 @@
+:PROPERTIES:
+:ID:       93a405e5-5d3e-43d1-9805-b2b4409cb0ba
+:END:
+#+title: Response object
+#+date: [2024-01-17 Wed 18:46]
+#+startup: overview
+
+contains everything necessary to make a WSGI response
+
+https://docs.pylonsproject.org/projects/webob/en/stable/reference.html#response
+- instances are in fact WSGI applications
+- can also represent result of calling a wsgi application
+-
+* Status
+* list of headers
+* body (or iterator that will produce a body)

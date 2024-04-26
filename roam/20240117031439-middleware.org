@@ -1,0 +1,24 @@
+:PROPERTIES:
+:ID:       5bef7806-d887-4d66-8c64-bc56816da0dc
+:END:
+#+title: Middleware
+#+date: [2024-01-17 Wed 03:14]
+#+startup: overview
+
+* info
+** [[https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface#WSGI_middleware][wikipedia]]
+A WSGI middleware component is a Python callable that is itself a WSGI application, but may handle requests by delegating to other WSGI applications.
+These applications can themselves be WSGI middleware components.[7]
+
+A middleware component can perform such functions as:[7]
+- Routing a request to different application objects based on the target URL, after changing the environment variables accordingly.
+- Allowing multiple applications or frameworks to run side-by-side in the same process
+- Load balancing and remote processing, by forwarding requests and responses over a network
+- Performing content post-processing, such as applying XSLT stylesheets
+** course
+https://peps.python.org/pep-0333/#middleware-components-that-play-both-sides
+Components that play both sides
+- usually used for tweaking the request
+
+middleware talks to both components
+- therefore needs to adhere to the specification of the [[id:637c51ef-cc7d-4cf0-bda2-9dc625b60dc7][Application object]] as well as the [[id:fe288fc1-457d-46be-aa41-5ae2235d35ed][Server side specification]]
