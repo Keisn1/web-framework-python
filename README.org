@@ -267,12 +267,10 @@ To see the framework in action we build an example application: [[https://github
 *** other heroku commands
 **** Scaling = number of running dynos (lightweight container) =heroku ps:scale web={number_of_dynos}=
 * Part 2 - ORM
-
 ORMs allow you to
 1. interact wiht db in own language of choice
 2. abstract away the database (easy switching)
 3. Usually written by SQL experts for performance reasons
-
 ** Design
 *** Connection
 #+begin_src python :results output
@@ -328,4 +326,75 @@ db.update(book)
 *** delete an object
 #+begin_src python :results output
 db.delete(Book, id=book.id)
+#+end_src
+** Implementing the Database, Tables, Columns and ForeignKeys
+The database holds primarily a database connection and has the ability to create new tables.
+Furthermore it has the ability to print the tables. Create and print tables are wrappers for executing sql commands.
+#+begin_src python :results output
+class Database:
+    def __init__(self, path: str):
+        self.conn = sqlite3.Connection(path)
+
+    def create(self, table: type[Table]):
+        self.conn.execute(table._get_create_sql())
+
+    @property
+    def tables(self) -> list[type[Table]]:
+        SELECT_TABLES_SQL = "SELECT name FROM sqlite_master WHERE type = 'table';"
+        return [x[0] for x in self.conn.execute(SELECT_TABLES_SQL).fetchall()]
+#+end_src
+
+It is only the database that executes sql commands via its db connection.
+Other objects may provide the Database with how it should query for them, e.g. Table.
+#+begin_src python :results output
+class Table:
+    ...
+    @classmethod
+    def _get_create_sql(cls):
+        CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS {name} ({fields});"
+        ...
+#+end_src
+
+New models inherit from the table class and set =Columns= as their class variables.
+#+begin_src python :results output
+class Author(Table):
+    name = Column(str)
+    age = Column(int)
+#+end_src
+
+Columns hold information about the type of the attributes that a certain table, e.g. Author, holds.
+It provides methods to translate those types to SQL-types.
+
+#+begin_src python :results output
+class Column:
+    def __init__(self, column_type: type):
+        self.type = column_type
+
+    @property
+    def sql_type(self):
+        SQLITE_TYPE_MAP = {
+            int: "INTEGER",
+            float: "REAL",
+            str: "TEXT",
+            bytes: "BLOB",
+            bool: "INTEGER",  # 0 or 1
+        }
+        return SQLITE_TYPE_MAP[self.type]
+#+end_src
+
+ForeignKeys are similar to Columns but instead of holding holding fundamental types like =int= or =str=, it holds other specific table types, e.g. =Author=
+#+begin_src python :results output
+class ForeignKey:
+    def __init__(self, table: type[Table]):
+        self._table = table
+
+    @property
+    def table(self):
+        return self._table
+
+# example usage
+class Book(Table):
+    title = Column(str)
+    published = Column(bool)
+    author = ForeignKey(Author)
 #+end_src
