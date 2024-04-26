@@ -5,7 +5,7 @@ from kaychen.api import API
 
 @pytest.fixture
 def app():
-    return API()
+    return API(templates_dir="tests/templates")
 
 
 @pytest.fixture
