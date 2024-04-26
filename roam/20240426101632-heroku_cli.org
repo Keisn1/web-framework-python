@@ -1,0 +1,39 @@
+:PROPERTIES:
+:ID:       3c75b37e-0353-4e94-a1af-2117e6a1f34f
+:END:
+#+title: Heroku cli
+#+date: [2024-04-26 Fri 10:16]
+#+startup: overview
+
+https://devcenter.heroku.com/articles/heroku-cli
+
+* Heroku cli
+** installation
+*** arch
+#+begin_src shell
+yay -S heroku-cli
+#+end_src
+** login
+- redirects to browser for usage of multi-factor authentication
+#+begin_src shell
+heroku login
+#+end_src
+** plugins
+https://devcenter.heroku.com/articles/heroku-cli#useful-cli-plugins
+** architecture
+- built with https://oclif.io/ (open cli framework)
+** troubleshooting
+*** debugging envs
+
+| Environment Variable   | Description                                                           |
+|------------------------+-----------------------------------------------------------------------|
+| HEROKU_DEBUG=1         | Shows debugging information mostly related to Heroku API interactions |
+| HEROKU_DEBUG_HEADERS=1 | Alongside HEROKU_DEBUG=1, shows HTTP headers                          |
+| DEBUG=*                | Shows verbose debugging information                                   |
+
+*** logfiles
+
+| OS          | Location                                             | |-------------+------------------------------------------------------|
+| macOS       | ~/Library/Caches/heroku/error.log                    |
+| Windows     | %LOCALAPPDATA%\heroku\error.log                      |
+| Linux/Other | ~/.cache/heroku/error.log (or XDG_CACHE_HOME if set) |

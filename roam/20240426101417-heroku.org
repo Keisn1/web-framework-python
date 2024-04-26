@@ -4,3 +4,13 @@
 #+title: Heroku
 #+date: [2024-04-26 Fri 10:14]
 #+startup: overview
+
+https://devcenter.heroku.com/articles/getting-started-with-python
+* [[id:1a314865-72ba-4eaa-b2fb-40f7054ba0a8][Eco Dyno plan]]
+* [[id:3c75b37e-0353-4e94-a1af-2117e6a1f34f][Heroku cli]]
+* workflow
+1. Define Procfile
+2. =heroku create=
+   - git remote is create alongside the app on heroku account
+   - deplying via git push
+3. =git push heroku main=

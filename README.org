@@ -252,3 +252,77 @@ Next we publish the package to Pypi using [[https://github.com/navdeep-G/setup.p
 ** example web app
 To see the framework in action we build an example application: [[https://github.com/Keisn1/kaychen-web-app][kaychen-web-app]]
 ** Deploying to Heroku
+*** workflow
+1. Define Procfile
+2. =heroku create=
+   - git remote is create alongside the app on heroku account
+   - deplying via git push
+3. =git push heroku main=
+4. Check if application is deployed: =heroku ps:scale web=1=
+5. View logs: =heroku logs --tail=
+6.
+*** other heroku commands
+**** Scaling = number of running dynos (lightweight container) =heroku ps:scale web={number_of_dynos}=
+* Part 2 - ORM
+
+ORMs allow you to
+1. interact wiht db in own language of choice
+2. abstract away the database (easy switching)
+3. Usually written by SQL experts for performance reasons
+
+** Design
+*** Connection
+#+begin_src python :results output
+from kaychen import Database
+
+db = Database("./test.db")
+#+end_src
+*** table definition
+#+begin_src python :results output
+from kaychen import Table, Column, ForeignKey
+
+class Author(Table):
+    name = Column(str)
+    age = Column(int)
+
+class Book(Table):
+    title = Column(str)
+    published = Column(bool)
+    author = ForeignKey(Author)
+#+end_src
+*** creating tables
+#+begin_src python :results output
+db.create(Author)
+db.create(Book)
+#+end_src
+*** inserting data
+#+begin_src python :results output
+kay = Author("Kay", age=12)
+db.insert(kay)
+#+end_src
+*** fetch all data
+#+begin_src python :results output
+authors = db.all(Author)
+#+end_src
+*** query
+#+begin_src python :results output
+author = db.query(Author, 47)
+#+end_src
+*** save object with foreign key reference
+#+begin_src python :results output
+book = Book(title="Building an ORM", published=True, author=greg)
+db.save(book)
+#+end_src
+*** fetch object with foreign key reference
+#+begin_src python :results output
+print(Book.get(55).author.name)
+#+end_src
+*** update an object
+#+begin_src python :results output
+book.title = "How to build an ORM"
+db.update(book)
+#+end_src
+*** delete an object
+#+begin_src python :results output
+db.delete(Book, id=book.id)
+#+end_src
