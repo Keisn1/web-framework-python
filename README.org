@@ -1,4 +1,6 @@
 #+title: Readme
+
+* Table of Contents
 #+TOC: headlines 1
 
 * Introduction
