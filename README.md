@@ -1,45 +1,43 @@
 
 # Table of Contents
 
-1.  [Introduction](#orgcbf3ee4)
-2.  [Part 1](#orge656e01)
-    1.  [WSGI](#orgc0538b9)
-        1.  [What is WSGI](#orgf20f575)
-        2.  [Application side](#orgc8b3854)
-    2.  [Routing](#org54117a7)
-    3.  [Unit test and test client](#orgcd0162e)
-    4.  [Templates](#org6a9eafe)
-    5.  [Static Files](#orgb2f8ce7)
-    6.  [Middleware](#org174fadf)
-        1.  [The middleware class, base functionality](#org25cae3a)
-        2.  [the convoluted part](#org826d7a2)
-        3.  [static files](#orgd1bd72e)
-    7.  [allowing methods](#org0c5f995)
-    8.  [Custom Responses](#orgeccbed9)
-    9.  [Pypi](#org5dfc811)
-    10. [example web app](#orgc3e2ef8)
-    11. [Deploying to Heroku](#org9fbf038)
-        1.  [workflow](#org3383b53)
-        2.  [other heroku commands](#orge4dbcca)
-3.  [Part 2 - ORM](#org27db4e8)
-    1.  [Design](#org2d5265e)
-        1.  [Connection](#org5fb5daa)
-        2.  [table definition](#orgf8f93f3)
-        3.  [creating tables](#orge217562)
-        4.  [inserting data](#org707623f)
-        5.  [fetch all data](#org6933468)
-        6.  [query](#org47d8a3a)
-        7.  [save object with foreign key reference](#org67333f5)
-        8.  [fetch object with foreign key reference](#org2adb142)
-        9.  [update an object](#org57d0362)
-        10. [delete an object](#org2f5ffa6)
+1.  [Introduction](#org84350f7)
+2.  [Part 1](#org11f8dc2)
+    1.  [WSGI](#org18b0281)
+        1.  [What is WSGI](#org2ed9c41)
+        2.  [Application side](#org1e487d1)
+    2.  [Routing](#org839bbed)
+    3.  [Unit test and test client](#orge64aaf5)
+    4.  [Templates](#org9bf5396)
+    5.  [Static Files](#org99d371a)
+    6.  [Middleware](#orge8c3ad4)
+        1.  [The middleware class, base functionality](#org00ccee8)
+        2.  [the convoluted part](#orga262db2)
+        3.  [static files](#org85af68d)
+    7.  [allowing methods](#org012d474)
+    8.  [Custom Responses](#org6d40a1a)
+    9.  [Pypi](#org9e31312)
+    10. [example web app](#org34fd608)
+    11. [Deploying to Heroku](#orgfaa2745)
+        1.  [workflow](#org4eac52b)
+        2.  [other heroku commands](#orgb444b69)
+3.  [Part 2 - ORM](#org453f4aa)
+    1.  [Design](#org6cff244)
+        1.  [Connection](#orgfb0cb3b)
+        2.  [table definition](#orgdab6ee0)
+        3.  [creating tables](#orgc514403)
+        4.  [inserting data](#orgf99dcc3)
+        5.  [fetch all data](#org41789e9)
+        6.  [query](#org0400e4c)
+        7.  [save object with foreign key reference](#orgb2485a4)
+        8.  [fetch object with foreign key reference](#orgf7223a1)
+        9.  [update an object](#org9da5e24)
+        10. [delete an object](#org75ffd39)
 
-[\![purpos](https://img.shields.io/badge/purpose-learning-green.svg)](https://img.shields.io/badge/purpose-learning-green.svg)
-[purpose]
-[[https://img.shields.io/pypi/v/bumbo.svg][Pypi](https://img.shields.io/badge/purpose-learning-green.svg)
+[\![label](https://img.shields.io/badge/label-message-color.svg)](https://img.shields.io/badge/label-message-color.svg)
 
 
-<a id="orgcbf3ee4"></a>
+<a id="org84350f7"></a>
 
 # Introduction
 
@@ -54,17 +52,17 @@ Over this course we learn about **WSGI** , how frameworks like **Django** and **
 and additionally about building your own **ORM** and **Deployment**.
 
 
-<a id="orge656e01"></a>
+<a id="org11f8dc2"></a>
 
 # Part 1
 
 
-<a id="orgc0538b9"></a>
+<a id="org18b0281"></a>
 
 ## WSGI
 
 
-<a id="orgf20f575"></a>
+<a id="org2ed9c41"></a>
 
 ### What is WSGI
 
@@ -73,7 +71,7 @@ WSGI (Web Server Gateway Interface) is a proposed standard as of PEP333 of how a
 This gives way for a unified way of talking to python web applications for web servers, which in turn permits to deploy python web applications in a standardized way.
 
 
-<a id="orgc8b3854"></a>
+<a id="org1e487d1"></a>
 
 ### Application side
 
@@ -91,7 +89,7 @@ This application can then be served e.g. with gunicorn or for development purpos
     server.serve_forever()
 
 
-<a id="org54117a7"></a>
+<a id="org839bbed"></a>
 
 ## Routing
 
@@ -108,7 +106,7 @@ To acheive Decorator like registering of routes like in **Flask** or injection-l
 For easier and more intuitive handling of `environ` and `start_response` one can use [webob](https://docs.pylonsproject.org/projects/webob/en/stable/index.html) Request and Response objects.
 
 
-<a id="orgcd0162e"></a>
+<a id="orge64aaf5"></a>
 
 ## Unit test and test client
 
@@ -123,7 +121,7 @@ To test the app in an fast, isolated and repeatable way, one would need a test<s
         return session
 
 
-<a id="org6a9eafe"></a>
+<a id="org9bf5396"></a>
 
 ## Templates
 
@@ -145,7 +143,7 @@ Templates are as easy as providing the templates<sub>dir</sub> on app initializa
         ).encode()
 
 
-<a id="orgb2f8ce7"></a>
+<a id="org99d371a"></a>
 
 ## Static Files
 
@@ -161,12 +159,12 @@ of our API class, and call that with whitenoise.
         return self.whitenoise(environ, start_response)
 
 
-<a id="org174fadf"></a>
+<a id="orge8c3ad4"></a>
 
 ## Middleware
 
 
-<a id="org25cae3a"></a>
+<a id="org00ccee8"></a>
 
 ### The middleware class, base functionality
 
@@ -195,7 +193,7 @@ Since each middleware serves as the Server-side implementation of the WSGI proto
 The wsgi logic of using environ and start<sub>response</sub> is hidden in the behavior of the webob objects Request and Response.
 
 
-<a id="org826d7a2"></a>
+<a id="orga262db2"></a>
 
 ### the convoluted part
 
@@ -224,7 +222,7 @@ We can then apply the same logic on our framework api, by initialising a base mi
             self.middleware(environ, start_response)
 
 
-<a id="orgd1bd72e"></a>
+<a id="org85af68d"></a>
 
 ### static files
 
@@ -239,7 +237,7 @@ This would unable our handling of static files. Therefore we oblige to be the st
         return self.middleware(environ, start_response)
 
 
-<a id="org0c5f995"></a>
+<a id="org012d474"></a>
 
 ## allowing methods
 
@@ -271,7 +269,7 @@ Which we then can exploit when we&rsquo;re handling the request
     ...
 
 
-<a id="orgeccbed9"></a>
+<a id="org6d40a1a"></a>
 
 ## Custom Responses
 
@@ -313,7 +311,7 @@ the response call method is executed. This is where the logic is applied then
             ...                     # more handling of html and text
 
 
-<a id="org5dfc811"></a>
+<a id="org9e31312"></a>
 
 ## Pypi
 
@@ -324,19 +322,19 @@ Next we publish the package to Pypi using [setup.py (for humans)](https://github
 -   need to create directories (`/static`, `/templates`)
 
 
-<a id="orgc3e2ef8"></a>
+<a id="org34fd608"></a>
 
 ## example web app
 
 To see the framework in action we build an example application: [kaychen-web-app](https://github.com/Keisn1/kaychen-web-app)
 
 
-<a id="org9fbf038"></a>
+<a id="orgfaa2745"></a>
 
 ## Deploying to Heroku
 
 
-<a id="org3383b53"></a>
+<a id="org4eac52b"></a>
 
 ### workflow
 
@@ -350,14 +348,14 @@ To see the framework in action we build an example application: [kaychen-web-app
 6.  
 
 
-<a id="orge4dbcca"></a>
+<a id="orgb444b69"></a>
 
 ### other heroku commands
 
 1.  Scaling = number of running dynos (lightweight container) `heroku ps:scale web={number_of_dynos}`
 
 
-<a id="org27db4e8"></a>
+<a id="org453f4aa"></a>
 
 # Part 2 - ORM
 
@@ -368,12 +366,12 @@ ORMs allow you to
 3.  Usually written by SQL experts for performance reasons
 
 
-<a id="org2d5265e"></a>
+<a id="org6cff244"></a>
 
 ## Design
 
 
-<a id="org5fb5daa"></a>
+<a id="orgfb0cb3b"></a>
 
 ### Connection
 
@@ -382,7 +380,7 @@ ORMs allow you to
     db = Database("./test.db")
 
 
-<a id="orgf8f93f3"></a>
+<a id="orgdab6ee0"></a>
 
 ### table definition
 
@@ -398,7 +396,7 @@ ORMs allow you to
         author = ForeignKey(Author)
 
 
-<a id="orge217562"></a>
+<a id="orgc514403"></a>
 
 ### creating tables
 
@@ -406,7 +404,7 @@ ORMs allow you to
     db.create(Book)
 
 
-<a id="org707623f"></a>
+<a id="orgf99dcc3"></a>
 
 ### inserting data
 
@@ -414,21 +412,21 @@ ORMs allow you to
     db.insert(kay)
 
 
-<a id="org6933468"></a>
+<a id="org41789e9"></a>
 
 ### fetch all data
 
     authors = db.all(Author)
 
 
-<a id="org47d8a3a"></a>
+<a id="org0400e4c"></a>
 
 ### query
 
     author = db.query(Author, 47)
 
 
-<a id="org67333f5"></a>
+<a id="orgb2485a4"></a>
 
 ### save object with foreign key reference
 
@@ -436,14 +434,14 @@ ORMs allow you to
     db.save(book)
 
 
-<a id="org2adb142"></a>
+<a id="orgf7223a1"></a>
 
 ### fetch object with foreign key reference
 
     print(Book.get(55).author.name)
 
 
-<a id="org57d0362"></a>
+<a id="org9da5e24"></a>
 
 ### update an object
 
@@ -451,7 +449,7 @@ ORMs allow you to
     db.update(book)
 
 
-<a id="org2f5ffa6"></a>
+<a id="org75ffd39"></a>
 
 ### delete an object
 
