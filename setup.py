@@ -18,7 +18,7 @@ URL = "https://github.com/Keisn1/web-framework-python.git"
 EMAIL = "kay.freyer@icloud.com"
 AUTHOR = "Kay Freyer"
 REQUIRES_PYTHON = ">=3.11.0"
-VERSION = "0.0.2"
+VERSION = "0.1.2"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -108,7 +108,8 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    # packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=["kaychen"],
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
     # entry_points={

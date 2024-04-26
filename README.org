@@ -245,3 +245,7 @@ def CustomResponse:
 #+end_src
 
 ** Pypi
+Next we publish the package to Pypi using [[https://github.com/navdeep-G/setup.py][setup.py (for humans)]]. A few things to keep in mind
+- =find_packages= used in setup.py, therefore need to have =__init__.py= so it finds the package
+- when using the package in combination with ~gunicorn~, one still needs to install ~gunicorn~ inside the virtualenv
+- need to create directories (~/static~, ~/templates~)
