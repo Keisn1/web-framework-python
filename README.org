@@ -1,5 +1,5 @@
 #+title: Readme
-
+#+TOC: headlines 1
 
 * Introduction
 [[purpose][https://img.shields.io/badge/purpose-learning-green.svg]]
