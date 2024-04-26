@@ -1,7 +1,8 @@
 #+title: Readme
 
 #+begin_src
-[[https://img.shields.io/badge/label-message-color.svg][![label](https://img.shields.io/badge/label-message-color.svg)]]
+![purpose](https://img.shields.io/badge/purpose-learning-green.svg)
+![PyPI](https://img.shields.io/pypi/v/bumbo.svg)
 #+end_src
 
 * Introduction
