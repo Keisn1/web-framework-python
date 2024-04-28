@@ -14,6 +14,35 @@ class Table:
             return _data[__name]
         return super().__getattribute__(__name)
 
+    def _get_insert_sql(self):
+        cls = self.__class__
+        fields = []
+        placeholders = []
+        values = []
+
+        for name, field in inspect.getmembers(cls):
+            if isinstance(field, Column):
+                fields.append(name)
+                values.append(getattr(self, name))
+                placeholders.append("?")
+            elif isinstance(field, ForeignKey):
+                fields.append(name + "_id")
+                values.append(getattr(self, name).id)
+                placeholders.append("?")
+
+        fields = ", ".join(fields)
+        placeholders = ", ".join(placeholders)
+
+        name = cls.__name__.lower()
+        sql = f"INSERT INTO {name} ({fields}) VALUES ({placeholders});"
+
+        return sql, values
+
+    def __setattr__(self, key, value):
+        super().__setattr__(key, value)
+        if key in self._data:
+            self._data[key] = value
+
     @classmethod
     def _get_var_list(cls):
         var_list = []
@@ -38,29 +67,29 @@ class Table:
         )
         return CREATE_TABLE_SQL.format(name=name, fields=fields)
 
-    def _get_insert_sql(self):
-        cls = self.__class__
-        fields = []
-        placeholders = []
-        values = []
+    @classmethod
+    def _get_select_all_sql(cls):
+        fields = ["id"]
+        for name, field in inspect.getmembers(cls):
+            if isinstance(field, Column):
+                fields.append(name)
+            elif isinstance(field, ForeignKey):
+                fields.append(name + "_id")
+
+        return f"SELECT {', '.join(fields)} FROM {cls.__name__.lower()};", fields
+
+    @classmethod
+    def _get_select_where_sql(cls, id=None):
+        fields = ["id"]
 
         for name, field in inspect.getmembers(cls):
             if isinstance(field, Column):
                 fields.append(name)
-                values.append(getattr(self, name))
-                placeholders.append("?")
             elif isinstance(field, ForeignKey):
                 fields.append(name + "_id")
-                values.append(getattr(self, name).id)
-                placeholders.append("?")
 
-        fields = ", ".join(fields)
-        placeholders = ", ".join(placeholders)
-
-        name = cls.__name__.lower()
-        sql = f"INSERT INTO {name} ({fields}) VALUES ({placeholders});"
-
-        return sql, values
+        sql = f"SELECT {', '.join(fields)} FROM {cls.__name__.lower()} WHERE id = ?;"
+        return sql, fields, [id]
 
 
 class ForeignKey:
@@ -100,6 +129,34 @@ class Database:
         cursor = self.conn.execute(sql, values)
         table._data["id"] = cursor.lastrowid
         self.conn.commit()
+
+    def all(self, table: type[Table]):
+        sql, fields = table._get_select_all_sql()
+
+        result = []
+        for row in self.conn.execute(sql).fetchall():
+            instance = table()
+            for field, value in zip(fields, row):
+                if field.endswith("_id"):
+                    field = field[:-3]
+                    fk = getattr(table, field)
+                    value = self.get(fk.table, id=value)
+                setattr(instance, field, value)
+            result.append(instance)
+
+        return result
+
+    def get(self, table: type[Table], id=None):
+        sql, fields, vals = table._get_select_where_sql(id=id)
+        row = self.conn.execute(sql, vals).fetchone()
+        instance = table()
+        for field, value in zip(fields, row):
+            if field.endswith("_id"):
+                field = field[:-3]
+                fk = getattr(table, field)
+                value = self.get(fk.table, id=value)
+            setattr(instance, field, value)
+        return instance
 
     @property
     def tables(self) -> list[type[Table]]:

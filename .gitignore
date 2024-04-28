@@ -3,3 +3,4 @@
 /dist/
 /kaychen.egg-info/
 /build/
+/test.db
