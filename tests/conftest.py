@@ -35,6 +35,16 @@ def Author():
 
 
 @pytest.fixture
+def AuthorVerbose():
+    class Author(Table):
+        name = Column(str)
+        surname = Column(str)
+        age = Column(int)
+
+    return Author
+
+
+@pytest.fixture
 def Book(Author):
     class Book(Table):
         title = Column(str)
