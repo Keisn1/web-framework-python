@@ -18,7 +18,7 @@ URL = "https://github.com/Keisn1/web-framework-python.git"
 EMAIL = "kay.freyer@icloud.com"
 AUTHOR = "Kay Freyer"
 REQUIRES_PYTHON = ">=3.11.0"
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
