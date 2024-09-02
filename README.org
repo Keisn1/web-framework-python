@@ -268,8 +268,8 @@ To see the framework in action we build an example application: [[https://github
 **** Scaling = number of running dynos (lightweight container) =heroku ps:scale web={number_of_dynos}=
 * Part 2 - ORM
 ORMs allow you to
-1. interact wiht db in own language of choice
-2. abstract away the database (easy switching)
+1. Interact with db in own language of choice
+2. Abstract away the database (easy switching)
 3. Usually written by SQL experts for performance reasons
 ** Design
 *** Connection
