@@ -1,0 +1,148 @@
+#+title: ORM - Object-relational mapping
+
+ORMs allow you to
+1. Interact with db in own language of choice
+2. Abstract away the database (easy switching)
+3. Usually written by SQL experts for performance reasons
+
+* Table of contents :TOC:
+- [[#design][Design]]
+  - [[#connection][Connection]]
+  - [[#table-definition][table definition]]
+  - [[#creating-tables][creating tables]]
+  - [[#inserting-data][inserting data]]
+  - [[#fetch-all-data][fetch all data]]
+  - [[#query][query]]
+  - [[#save-object-with-foreign-key-reference][save object with foreign key reference]]
+  - [[#fetch-object-with-foreign-key-reference][fetch object with foreign key reference]]
+  - [[#update-an-object][update an object]]
+  - [[#delete-an-object][delete an object]]
+- [[#implementing-the-database-tables-columns-and-foreignkeys][Implementing the Database, Tables, Columns and ForeignKeys]]
+
+* Design
+** Connection
+#+begin_src python :results output
+from kaychen import Database
+
+db = Database("./test.db")
+#+end_src
+** table definition
+#+begin_src python :results output
+from kaychen import Table, Column, ForeignKey
+
+class Author(Table):
+    name = Column(str)
+    age = Column(int)
+
+class Book(Table):
+    title = Column(str)
+    published = Column(bool)
+    author = ForeignKey(Author)
+#+end_src
+** creating tables
+#+begin_src python :results output
+db.create(Author)
+db.create(Book)
+#+end_src
+** inserting data
+#+begin_src python :results output
+kay = Author("Kay", age=12)
+db.insert(kay)
+#+end_src
+** fetch all data
+#+begin_src python :results output
+authors = db.all(Author)
+#+end_src
+** query
+#+begin_src python :results output
+author = db.query(Author, 47)
+#+end_src
+** save object with foreign key reference
+#+begin_src python :results output
+book = Book(title="Building an ORM", published=True, author=greg)
+db.save(book)
+#+end_src
+** fetch object with foreign key reference
+#+begin_src python :results output
+print(Book.get(55).author.name)
+#+end_src
+** update an object
+#+begin_src python :results output
+book.title = "How to build an ORM"
+db.update(book)
+#+end_src
+** delete an object
+#+begin_src python :results output
+db.delete(Book, id=book.id)
+#+end_src
+* Implementing the Database, Tables, Columns and ForeignKeys
+The database holds primarily a database connection and has the ability to create new tables.
+Furthermore it has the ability to print the tables. Create and print tables are wrappers for executing sql commands.
+#+begin_src python :results output
+class Database:
+    def __init__(self, path: str):
+        self.conn = sqlite3.Connection(path)
+
+    def create(self, table: type[Table]):
+        self.conn.execute(table._get_create_sql())
+
+    @property
+    def tables(self) -> list[type[Table]]:
+        SELECT_TABLES_SQL = "SELECT name FROM sqlite_master WHERE type = 'table';"
+        return [x[0] for x in self.conn.execute(SELECT_TABLES_SQL).fetchall()]
+#+end_src
+
+It is only the database that executes sql commands via its db connection.
+Other objects may provide the Database with how it should query for them, e.g. Table.
+#+begin_src python :results output
+class Table:
+    ...
+    @classmethod
+    def _get_create_sql(cls):
+        CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS {name} ({fields});"
+        ...
+#+end_src
+
+New models inherit from the table class and set =Columns= as their class variables.
+#+begin_src python :results output
+class Author(Table):
+    name = Column(str)
+    age = Column(int)
+#+end_src
+
+Columns hold information about the type of the attributes that a certain table, e.g. Author, holds.
+It provides methods to translate those types to SQL-types.
+
+#+begin_src python :results output
+class Column:
+    def __init__(self, column_type: type):
+        self.type = column_type
+
+    @property
+    def sql_type(self):
+        SQLITE_TYPE_MAP = {
+            int: "INTEGER",
+            float: "REAL",
+            str: "TEXT",
+            bytes: "BLOB",
+            bool: "INTEGER",  # 0 or 1
+        }
+        return SQLITE_TYPE_MAP[self.type]
+#+end_src
+
+ForeignKeys are similar to Columns but instead of holding holding fundamental types like =int= or =str=, it holds other specific table types, e.g. =Author=
+#+begin_src python :results output
+class ForeignKey:
+    def __init__(self, table: type[Table]):
+        self._table = table
+
+    @property
+    def table(self):
+        return self._table
+
+# example usage
+class Book(Table):
+    title = Column(str)
+    published = Column(bool)
+    author = ForeignKey(Author)
+#+end_src
